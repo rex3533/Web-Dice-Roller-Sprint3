@@ -1,6 +1,6 @@
 (() => {
   // ====== CONFIG: point this to the App Service base URL ======
-  const API_BASE = "https://server-for-dice-roller-dcesckf6hccqfpcm.centralus-01.azurewebsites.net/api";
+  const API_BASE = "node-js-on-azure-gc-cnbwb7e9fcgxd0e0.centralus-01.azurewebsites.net";
 
   // Same pixel table already use
   const POS = [
