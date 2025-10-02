@@ -1,61 +1,75 @@
 (() => {
-  // Pixel coordinates for each face (x,y) found via gimp. 
+  // ====== CONFIG: point this to the App Service base URL ======
+  const API_BASE = "server-for-dice-roller-dcesckf6hccqfpcm.centralus-01.azurewebsites.net";
+
+  // Same pixel table already use
   const POS = [
-    {x: 14,  y: 3},   // 1
-    {x: 228, y: 3},   // 2
-    {x: 442, y: 3},   // 3
-    {x: 657, y: 3},   // 4
-    {x: 874, y: 5},   // 5
-    {x: 14,  y: 223}, // 6
-    {x: 228, y: 223}, // 7
-    {x: 442, y: 223}, // 8
-    {x: 657, y: 223}, // 9
-    {x: 874, y: 223}, // 10
-    {x: 14,  y: 426}, // 11
-    {x: 228, y: 426}, // 12
-    {x: 442, y: 426}, // 13
-    {x: 657, y: 426}, // 14
-    {x: 874, y: 426}, // 15
-    {x: 14,  y: 645}, // 16
-    {x: 228, y: 645}, // 17
-    {x: 442, y: 645}, // 18
-    {x: 657, y: 645}, // 19
-    {x: 874, y: 645}  // 20
+    {x: 14,  y: 3}, {x: 228, y: 3}, {x: 442, y: 3}, {x: 657, y: 3}, {x: 874, y: 5},
+    {x: 14,  y: 223}, {x: 228, y: 223}, {x: 442, y: 223}, {x: 657, y: 223}, {x: 874, y: 223},
+    {x: 14,  y: 426}, {x: 228, y: 426}, {x: 442, y: 426}, {x: 657, y: 426}, {x: 874, y: 426},
+    {x: 14,  y: 645}, {x: 228, y: 645}, {x: 442, y: 645}, {x: 657, y: 645}, {x: 874, y: 645}
   ];
 
-  const dieEl    = document.getElementById('die');          // for aria-label only
-  const spriteEl = document.getElementById('dieSprite');    // the <img> we shift
+  const dieEl    = document.getElementById('die');
+  const spriteEl = document.getElementById('dieSprite');
   const result   = document.getElementById('result');
   const countEl  = document.getElementById('count');
   const rollBtn  = document.getElementById('rollBtn');
+  const corsBtn  = document.getElementById('corsBtn'); // may be null if skipped the button
 
   let count = 0;
 
-  function randomD20() {
-    return Math.floor(Math.random() * 20) + 1;
-  }
-
   function setDieFace(n) {
     const p = POS[n - 1];
-    // Move the big image so that (x,y) ends up at the top-left of the window
     spriteEl.style.transform = `translate(${-p.x}px, ${-p.y}px)`;
     dieEl.setAttribute('aria-label', `D20 shows ${n}`);
   }
 
-  function roll() {
-    const n = randomD20();
-    setDieFace(n);
-    result.value = n;
-    count += 1;
-    countEl.value = count;
-    rollBtn.focus(); // keep Enter re-rolling
+  async function apiRandom(min, max) {
+    const url = `${API_BASE}/random?min=${min}&max=${max}`;
+    const r = await fetch(url, { mode: "cors" });
+    if (!r.ok) throw new Error(`API error ${r.status}`);
+    const j = await r.json();
+    return j.n;
   }
 
-  // Only the button rolls the die
-  rollBtn.addEventListener('click', roll);
+  async function roll() {
+    try {
+      const n = await apiRandom(1, 20);
+      setDieFace(n);
+      result.value = n;
+      count += 1;
+      countEl.value = count;
+    } catch (e) {
+      console.error("Random API failed:", e);
+      result.value = "ERR";
+    } finally {
+      rollBtn?.focus();
+    }
+  }
 
-  // Auto-roll once on page load
+  // Wake the Node server without blocking UI
+  async function wakeServer() {
+    try { fetch(`${API_BASE}/ping`, { mode: "cors" }); } catch {}
+  }
+
+  // CORS failure demo: calls /nocors which has no CORS headers
+  async function demoCorsFailure() {
+    try {
+      console.log("CORS demo: calling /nocors (should fail)...");
+      await fetch(`${API_BASE}/nocors`, { mode: "cors" });
+      console.warn("Unexpected: /nocors succeeded (CORS likely open).");
+    } catch (e) {
+      console.log("CORS failed as expected:", e);
+      alert("CORS failed as expected. Check the DevTools Console for the error.");
+    }
+  }
+
+  rollBtn?.addEventListener('click', roll);
+  corsBtn?.addEventListener('click', demoCorsFailure);
+
   window.addEventListener('DOMContentLoaded', () => {
-    roll();
+    wakeServer();   // asynchronous “wake up”
+    roll();         // auto-roll once on page load (previous behavior)
   });
 })();
