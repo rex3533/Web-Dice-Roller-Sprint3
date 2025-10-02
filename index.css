@@ -1,0 +1,170 @@
+/* ===========================
+   Dark Theme Base (done via chatgpt and copilot)
+   =========================== */
+:root{
+  --bg: #0f0f10;
+  --panel: #17171a;
+  --panel-2: #1d1d22;
+  --text: #e8e8f0;
+  --muted: #a9a9b6;
+  --accent: #6aa1ff;
+  --accent-2: #86b7ff;
+  --radius: 14px;
+  --shadow: 0 6px 16px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body{
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  color: var(--text);
+  background: radial-gradient(1200px 800px at 25% -10%, #131316 20%, #0f0f10 62%) fixed;
+}
+
+/* Containers */
+.container{
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header / Footer */
+.site-header{
+  background: linear-gradient(180deg, #141419, #111115);
+  border-bottom: 1px solid #2b2b31;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.header-inner{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.site-header h1{
+  font-weight: 700;
+  margin: 10px 0;
+  letter-spacing: 0.2px;
+}
+.nav a{
+  color: var(--muted);
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+.nav a[aria-disabled="true"]{ opacity: .6; pointer-events: none; }
+
+.site-footer{
+  margin-top: 40px;
+  padding: 24px 0 60px;
+  color: var(--muted);
+  border-top: 1px solid #2b2b31;
+}
+
+/* Cards */
+.card{
+  background: linear-gradient(180deg, var(--panel), var(--panel-2));
+  border: 1px solid #2b2b31;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  margin: 18px 0;
+}
+.card h2{
+  margin: 4px 0 10px;
+  font-size: 1.25rem;
+}
+
+/* Buttons */
+.btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  font-weight: 700;
+  border-radius: 12px;
+  border: 1px solid #2b2b31;
+  background: linear-gradient(180deg, #1a1a22, #15151b);
+  color: var(--text);
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform .08s ease, box-shadow .15s ease, border-color .2s ease;
+}
+.btn:hover{ transform: translateY(-1px); border-color: #3b3b45; }
+.btn:active{ transform: translateY(0); }
+.btn:focus{ outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* How-to callout */
+.main-info{
+  border-left: 4px solid var(--accent);
+}
+
+/* ===========================
+   D20 Roller Layout
+   =========================== */
+.roller{
+  display: grid;
+  grid-template-columns: 180px 1fr 260px;
+  gap: 16px;
+  align-items: center;
+}
+#rollBtn{ width: 100%; }
+
+/* Die sprite viewport — EXACT TILE SIZE using <img> shift (prevents scaling issues) */
+.die{
+  width: 195px;            /* tile width */
+  height: 210px;           /* tile height */
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;        /* crop window */
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid #2b2b31;
+  cursor: default;         /* no click-to-roll */
+}
+
+/* The full sprite image sits inside and is shifted with translate() */
+.die img{
+  position: relative;
+  left: 0; top: 0;
+  width: 1070px;           /* lock to native sprite size to avoid browser scaling */
+  height: 855px;           /* lock to native sprite size */
+  max-width: none;         /* prevent responsive shrink */
+  image-rendering: auto;   /* keep it crisp */
+  transform: translate(-14px, -3px); /* face 1 default */
+}
+
+
+
+
+/* Numbers panel */
+.numbers{
+  display: grid;
+  grid-template-columns: 1fr 140px;
+  gap: 8px 12px;
+  align-items: center;
+}
+.numbers label{ color: var(--muted); }
+.num{
+  text-align: right;                 /* requirement: right-justified */
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid #2b2b31;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+/* Keyboard kbd tag */
+kbd{
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  background: #20202a;
+  color: var(--text);
+  border: 1px solid #2e2e36;
+  border-bottom-width: 2px;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+

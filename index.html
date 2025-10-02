@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" >
+  <meta name="viewport" content="width=device-width, initial-scale=1" >
+  <title>D20 Dice Roller</title>
+  <link rel="stylesheet" href="index.css" >
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <h1>D20 Dice Roller</h1>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Roller UI -->
+    <section class="card" aria-labelledby="roller">
+      <h2 id="roller">Roll the D20</h2>
+
+      <div class="roller">
+        <button id="rollBtn" class="btn" autofocus aria-label="Roll the D20">🎲 Roll</button>
+
+        
+    <!-- Die sprite viewport -->
+    <div id="die" class="die" role="img" aria-label="D20 face">
+        <img id="dieSprite" src="./assets/d20-sprite.png" alt="D20 sprite" draggable="false" >
+    </div>
+
+
+        <!-- Numbers panel -->
+        <div class="numbers">
+          <label for="result">Result</label>
+          <input id="result" class="num" type="text" inputmode="numeric" readonly value="--" />
+          <label for="count">Roll Count</label>
+          <input id="count" class="num" type="text" inputmode="numeric" readonly value="0" />
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
